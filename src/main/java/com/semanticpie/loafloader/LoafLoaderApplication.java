@@ -1,0 +1,13 @@
+package com.semanticpie.loafloader;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class LoafLoaderApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(LoafLoaderApplication.class, args);
+	}
+
+}
