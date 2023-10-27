@@ -1,5 +1,6 @@
 package com.semanticpie.loafloader.services.jmantic;
 
+import com.semanticpie.loafloader.services.sync.ResourceAlreadyExistException;
 import lombok.extern.slf4j.Slf4j;
 import org.ostis.api.context.DefaultScContext;
 import org.ostis.scmemory.model.element.edge.EdgeType;
@@ -35,7 +36,7 @@ public class JManticServiceImpl implements JManticService {
     private void createResource(String hash, MultipartFile multipartFile) throws ScMemoryException {
         log.info("try createResource {}", hash);
         if (context.findKeynode(hash).isPresent()) {
-            throw new ScMemoryException("Resource already exist");
+            throw new ResourceAlreadyExistException(hash);
         }
         log.info("createResource {}", hash);
 
@@ -43,7 +44,7 @@ public class JManticServiceImpl implements JManticService {
 
         var noRolFormat = context.resolveKeynode("nrel_format", NodeType.CONST_NO_ROLE);
         var classFormat = context.resolveKeynode("format", NodeType.CONST_CLASS);
-        var resourceFormat = context.resolveKeynode(toContentType(multipartFile.getContentType()), NodeType.CONST);
+        var resourceFormat = context.resolveKeynode(toContentType(multipartFile.getContentType()), NodeType.CONST_CLASS);
         context.resolveEdge(classFormat, EdgeType.ACCESS_VAR_POS_PERM, resourceFormat);
         var edge = context.resolveEdge(resource, EdgeType.D_COMMON_VAR, resourceFormat);
         context.resolveEdge(noRolFormat, EdgeType.ACCESS_VAR_POS_PERM, edge);
@@ -62,8 +63,8 @@ public class JManticServiceImpl implements JManticService {
 
     private String toContentType(String contentType) {
         if (contentType != null)
-            return "format " + contentType.replace('/', '-');
+            return "format_" + contentType.replace('/', '_');
         else
-            return "Undefined Type";
+            return "undefined_format";
     }
 }

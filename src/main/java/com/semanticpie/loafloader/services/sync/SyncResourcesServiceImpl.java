@@ -26,11 +26,13 @@ public class SyncResourcesServiceImpl implements SyncResourcesService{
 
     @Override
     public String sync(MultipartFile multipartFile)  {
+        String hash = null;
         try {
-            String hash = DigestUtils.md5DigestAsHex(multipartFile.getInputStream());
+            hash = DigestUtils.md5DigestAsHex(multipartFile.getInputStream());
 
-            syncWithSCMemory(hash, multipartFile);
             syncWithMinIO(hash, multipartFile);
+            syncWithSCMemory(hash, multipartFile);
+
             return hash;
         } catch (IOException e) {
             throw new SyncException(e);
@@ -38,6 +40,8 @@ public class SyncResourcesServiceImpl implements SyncResourcesService{
             throw new SyncException(e);
         } catch (ScMemoryException e) {
             throw new SyncException(e);
+        } catch (ResourceAlreadyExistException e) {
+            return hash;
         }
     }
 

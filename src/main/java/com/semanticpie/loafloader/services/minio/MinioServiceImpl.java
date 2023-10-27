@@ -1,6 +1,7 @@
 package com.semanticpie.loafloader.services.minio;
 
 import com.semanticpie.loafloader.config.MinioConfiguration;
+import com.semanticpie.loafloader.services.sync.ResourceAlreadyExistException;
 import io.minio.*;
 import io.minio.errors.MinioException;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +33,7 @@ public class MinioServiceImpl implements MinioService {
                             .build()
             );
         } catch (Exception e) {
-            throw new MinioException("Failed to download file from MinIO");
+            throw new ResourceAlreadyExistException(hash);
         }
     }
 
