@@ -6,10 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 
 @Slf4j
@@ -39,16 +40,20 @@ public class APIController {
 
     @CrossOrigin("*")
     @PostMapping()
-    public ResponseEntity<?> postResource(@RequestParam("resource") MultipartFile file) {
+    public ResponseEntity<?> postMultipleResource(@RequestParam("resources") List<MultipartFile> files) {
         try {
-            log.info("POST /{}  - [{}:{}]", file.getName(), file.getContentType(), file.getSize());
-            var id = syncResourcesService.sync(file);
-            return ResponseEntity.ok(String.valueOf(id));
+            StringBuilder result = new StringBuilder();
+            for (var file : files) {
+                var id = syncResourcesService.sync(file);
+                result.append(id).append('\n');
+            }
+
+
+            return ResponseEntity.ok(result);
         } catch (RuntimeException e) {
             log.warn("OMG!!! Why so bad, bro. Error: {}", e.getMessage());
-//            log.error("errr", e);
+            log.error("errr", e);
             return  ResponseEntity.status(HttpStatus.CONFLICT).body(ErrorResponse.builder().message(e.getMessage()).build());
         }
     }
-
 }
