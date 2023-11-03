@@ -3,6 +3,7 @@ package com.semanticpie.loafloader.services.sync;
 import com.semanticpie.loafloader.services.jmantic.JManticService;
 import com.semanticpie.loafloader.services.minio.MinioService;
 import io.minio.errors.MinioException;
+import lombok.extern.slf4j.Slf4j;
 import org.ostis.scmemory.model.exception.ScMemoryException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 
+@Slf4j
 @Service
 public class SyncResourcesServiceImpl implements SyncResourcesService{
     private final MinioService minioService;
@@ -34,14 +36,14 @@ public class SyncResourcesServiceImpl implements SyncResourcesService{
             syncWithSCMemory(hash, multipartFile);
 
             return hash;
+        } catch (ResourceAlreadyExistException e) {
+            return hash;
         } catch (IOException e) {
             throw new SyncException(e);
         } catch (MinioException e) {
             throw new SyncException(e);
         } catch (ScMemoryException e) {
             throw new SyncException(e);
-        } catch (ResourceAlreadyExistException e) {
-            return hash;
         }
     }
 

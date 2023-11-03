@@ -41,28 +41,16 @@ public class JManticServiceImpl implements JManticService {
         log.info("createResource {}", hash);
 
         var resource = context.resolveKeynode(hash, NodeType.CONST);
-
         var noRolFormat = context.resolveKeynode("nrel_format", NodeType.CONST_NO_ROLE);
         var classFormat = context.resolveKeynode("format", NodeType.CONST_CLASS);
         var resourceFormat = context.resolveKeynode(toContentType(multipartFile.getContentType()), NodeType.CONST_CLASS);
-        context.resolveEdge(classFormat, EdgeType.ACCESS_VAR_POS_PERM, resourceFormat);
+        context.createEdge(EdgeType.ACCESS_CONST_POS_PERM, classFormat, resourceFormat);
         var edge = context.resolveEdge(resource, EdgeType.D_COMMON_VAR, resourceFormat);
         context.resolveEdge(noRolFormat, EdgeType.ACCESS_VAR_POS_PERM, edge);
     }
 
-//    private Long resolveResource(String contentType, InputStream resourceStream) throws ScMemoryException, IOException {
-//        String hash = DigestUtils.md5DigestAsHex(resourceStream);
-//
-//        ScNode node = context.resolveKeynode(hash, NodeType.CONST);
-//        var nrelFormat = context.resolveKeynode("nrel_format", NodeType.CONST_NO_ROLE);
-//        var format = context.resolveKeynode(contentType, NodeType.CONST);
-//        var edge = context.resolveEdge(node, EdgeType.D_COMMON_VAR, format);
-//        context.resolveEdge(nrelFormat, EdgeType.ACCESS_VAR_POS_PERM, edge);
-//        return node.getAddress();
-//    }
-
     private String toContentType(String contentType) {
-        if (contentType != null)
+        if (contentType != null && !contentType.isEmpty())
             return "format_" + contentType.replace('/', '_');
         else
             return "undefined_format";
