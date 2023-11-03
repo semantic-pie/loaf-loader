@@ -2,6 +2,7 @@ plugins {
     id 'java'
     //support Idea IDE
     id 'idea'
+    id 'application'
     id 'org.springframework.boot' version '3.1.5'
     id 'com.github.johnrengelman.shadow' version '7.0.0'
 }
@@ -17,6 +18,10 @@ idea {
         downloadJavadoc = true
         downloadSources = true
     }
+}
+
+application {
+    mainClass = 'com.semanticpie.loafloader.LoafLoaderApplication'
 }
 
 repositories {

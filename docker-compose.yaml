@@ -1,0 +1,25 @@
+version: '1'
+services:
+  app:
+    build:
+      context: ./app
+    network_mode: "host"
+    ports:
+      - 8080:8080
+    volumes:
+      - ./app:/app
+    depends_on:
+      - minio
+
+  minio:
+    image: minio/minio
+    network_mode: "host"     
+    ports:
+      - 9000:9000
+    environment:
+      - MINIO_ACCESS_KEY=minio1234567890
+      - MINIO_SECRET_KEY=minio1234567890
+    volumes:
+      - ./minio/data:/data
+    command: server /data
+
