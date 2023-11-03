@@ -2,8 +2,7 @@ plugins {
     id 'java'
     //support Idea IDE
     id 'idea'
-//    id "io.spring.dependency-management" version "1.0.11.RELEASE"
-    // Build uber-jar
+    id 'org.springframework.boot' version '3.1.5'
     id 'com.github.johnrengelman.shadow' version '7.0.0'
 }
 
@@ -22,13 +21,8 @@ idea {
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
-
-//dependencyManagement {
-//    imports {
-//        mavenBom 'org.springframework.boot:spring-boot-dependencies:2.5.4'
-//    }
-//}
 
 configurations{
     configureEach {
@@ -39,7 +33,6 @@ configurations{
 
 
 dependencies {
-
     implementation 'com.google.guava:guava:30.1.1-jre'
     implementation 'org.projectlombok:lombok:1.18.28'
     annotationProcessor 'org.projectlombok:lombok:1.18.28'
@@ -52,24 +45,16 @@ dependencies {
 }
 
 shadowJar {
-    archiveBaseName.set('exampleUber')
-    archiveVersion.set('0.1.0')
+    archiveBaseName.set('loaf')
+    archiveVersion.set('')
     archiveClassifier.set('')
+
     manifest {
         attributes 'Main-Class': 'com.semanticpie.loafloader.LoafLoaderApplication'
     }
 }
 
 tasks.build.dependsOn tasks.shadowJar
-
-//print versions from BOM
-task managedVersions {
-    doLast {
-        dependencyManagement.managedVersions.each {
-            println it
-        }
-    }
-}
 
 test {
     useJUnitPlatform()
