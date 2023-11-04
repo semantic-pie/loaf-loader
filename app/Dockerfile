@@ -22,24 +22,24 @@ WORKDIR $APP_HOME
 COPY --chown=gradle:gradle build.gradle settings.gradle $APP_HOME/
 COPY --chown=gradle:gradle src $APP_HOME/src
 
-#
-# Build the application.
-#
-RUN gradle --no-daemon build
+##
+## Build the application.
+##
+#RUN gradle bootJar
 
+##
+## Java image for the application to run in.
+##
+#FROM openjdk
 #
-# Java image for the application to run in.
+##
+## Copy the jar file in and name it app.jar.
+##
+#ARG BUILD_HOME
+#ENV APP_HOME=$BUILD_HOME
+#COPY --from=build-image $APP_HOME/build/libs/loaf-loader.jar app.jar
 #
-FROM openjdk
-
-#
-# Copy the jar file in and name it app.jar.
-#
-ARG BUILD_HOME
-ENV APP_HOME=$BUILD_HOME
-COPY --from=build-image $APP_HOME/build/libs/loaf-loader.jar app.jar
-
-#
-# The command to run when the container starts.
-#
-ENTRYPOINT java -jar app.jar
+##
+## The command to run when the container starts.
+##
+#ENTRYPOINT java -jar app.jar

@@ -1,8 +1,7 @@
 version: '1'
 services:
   app:
-    build:
-      context: ./app
+    build: ./app
     network_mode: "host"
     ports:
       - 8080:8080
@@ -10,6 +9,7 @@ services:
       - ./app:/app
     depends_on:
       - minio
+    command: "gradle bootRun"
 
   minio:
     image: minio/minio

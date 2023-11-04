@@ -6,6 +6,13 @@ import org.ostis.api.context.DefaultScContext;
 import org.ostis.scmemory.model.element.edge.EdgeType;
 import org.ostis.scmemory.model.element.node.NodeType;
 import org.ostis.scmemory.model.exception.ScMemoryException;
+import org.ostis.scmemory.model.pattern.ScPattern;
+import org.ostis.scmemory.model.pattern.pattern3.ScPattern3Impl;
+import org.ostis.scmemory.websocketmemory.memory.pattern.DefaultWebsocketScPattern;
+import org.ostis.scmemory.websocketmemory.memory.pattern.SearchingPatternTriple;
+import org.ostis.scmemory.websocketmemory.memory.pattern.element.AliasPatternElement;
+import org.ostis.scmemory.websocketmemory.memory.pattern.element.FixedPatternElement;
+import org.ostis.scmemory.websocketmemory.memory.pattern.element.TypePatternElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -44,7 +51,7 @@ public class JManticServiceImpl implements JManticService {
         var noRolFormat = context.resolveKeynode("nrel_format", NodeType.CONST_NO_ROLE);
         var classFormat = context.resolveKeynode("format", NodeType.CONST_CLASS);
         var resourceFormat = context.resolveKeynode(toContentType(multipartFile.getContentType()), NodeType.CONST_CLASS);
-        context.createEdge(EdgeType.ACCESS_CONST_POS_PERM, classFormat, resourceFormat);
+        context.resolveEdge(classFormat, EdgeType.ACCESS_VAR_POS_PERM, resourceFormat);
         var edge = context.resolveEdge(resource, EdgeType.D_COMMON_VAR, resourceFormat);
         context.resolveEdge(noRolFormat, EdgeType.ACCESS_VAR_POS_PERM, edge);
     }
