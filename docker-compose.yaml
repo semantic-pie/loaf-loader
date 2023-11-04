@@ -20,6 +20,6 @@ services:
       - MINIO_ACCESS_KEY=minio1234567890
       - MINIO_SECRET_KEY=minio1234567890
     volumes:
-      - ./minio/data:/data
+      - ./data:/data
     command: server /data
 
